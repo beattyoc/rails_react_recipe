@@ -1,7 +1,9 @@
 # Rails React Recipe
-Simple example of a Ruby on Rails web application with a React frontend where you can View, Create and Delete recipes. 
+Simple example of a Ruby on Rails web application with a React frontend where you can View, Create and Delete recipes.
 
 This [tutorial](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-ruby-on-rails-project-with-a-react-frontend "DigitalOcean - How to set up a Ruby on Rails project with a React frontend") was used as a guide with initial setup.
+
+The functionality has been extended beyond the tutorial to include editing a recipe.
 
 ## Set Up
 ### Prerequisites

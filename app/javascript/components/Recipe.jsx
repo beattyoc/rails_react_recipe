@@ -6,7 +6,7 @@ class Recipe extends React.Component {
     super(props);
     this.state = { recipe: { ingredients: "" } };
     this.addHtmlEntities = this.addHtmlEntities.bind(this);
-    this.deleteRecipe = this.deleteRecipe.bind(this)
+    this.deleteRecipe = this.deleteRecipe.bind(this);
   }
 
   componentDidMount() {
@@ -83,6 +83,9 @@ class Recipe extends React.Component {
               <button type="button" className="btn btn-danger" onClick={this.deleteRecipe}>
                 Delete Recipe
               </button>
+              <Link to={`/recipe/${recipe.id}/edit`} className="btn custom-button mt-3">
+                Edit Recipe
+              </Link>
             </div>
           </div>
           <Link to="/recipes" className="btn btn-link">

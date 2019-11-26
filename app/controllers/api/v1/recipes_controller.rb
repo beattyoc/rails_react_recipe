@@ -26,6 +26,16 @@ class Api::V1::RecipesController < ApplicationController
     render json: { message: 'Recipe deleted!' }
   end
 
+  def update
+    if recipe
+      # TODO Validate that update was successful and react accordingly
+      recipe.update(recipe_params)
+      render json: recipe
+    else
+      render json: recipe.errors
+    end
+  end
+
   private
 
   def recipe_params
