@@ -38,7 +38,7 @@ class EditRecipe extends React.Component {
                 id: response.id,
                 name: response.name,
                 ingredients: response.ingredients,
-                instruction: response.instruction
+                instruction: response.instruction.replace(/<br> <br>/g, "\n")
             }))
             .catch(() => this.props.history.push("/recipes"));
     }
