@@ -8,13 +8,10 @@ class EditRecipe extends React.Component {
             id: "",
             name: "",
             ingredients: "",
-            instruction: ""
-        };
-        this.initialState = {
-            id: "",
-            name: "",
-            ingredients: "",
-            instruction: ""
+            instruction: "",
+            initialName: "",
+            initialIngredients: "",
+            initialInstruction: ""
         };
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -38,7 +35,10 @@ class EditRecipe extends React.Component {
                 id: response.id,
                 name: response.name,
                 ingredients: response.ingredients,
-                instruction: response.instruction.replace(/<br> <br>/g, "\n")
+                instruction: response.instruction.replace(/<br> <br>/g, "\n"),
+                initialName: response.name,
+                initialIngredients: response.ingredients,
+                initialInstruction: response.instruction.replace(/<br> <br>/g, "\n")
             }))
             .catch(() => this.props.history.push("/recipes"));
     }
@@ -100,8 +100,11 @@ class EditRecipe extends React.Component {
     }
 
     onReset() {
-        const id = this.state.id
-        this.fetchData(id)
+        this.setState({
+            name: this.state.initialName,
+            ingredients: this.state.initialIngredients,
+            instruction: this.state.initialInstruction
+        });
     }
 
     render() {
