@@ -81,4 +81,5 @@ $ echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo
 ## Usage
 The application is a simple example of connecting a React frontent with a Ruby on Rails application.
 
-You may now View, Create and Delete recipes.
+You may now View, Create, Edit and Delete recipes.
+You may also upload images per recipe.

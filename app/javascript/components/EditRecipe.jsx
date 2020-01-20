@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import ImageUploader from "react-images-upload";
 
 class EditRecipe extends React.Component {
     constructor(props) {
@@ -9,9 +10,11 @@ class EditRecipe extends React.Component {
             name: "",
             ingredients: "",
             instruction: "",
+            pictures: [],
             initialName: "",
             initialIngredients: "",
-            initialInstruction: ""
+            initialInstruction: "",
+            initialPictures: []
         };
         this.onChange = this.onChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
@@ -19,6 +22,20 @@ class EditRecipe extends React.Component {
         this.stripHtmlEntities = this.stripHtmlEntities.bind(this);
         this.addHtmlEntities = this.addHtmlEntities.bind(this);
         this.fetchData = this.fetchData.bind(this);
+        this.onDrop = this.onDrop.bind(this);
+    }
+
+    onDrop(picture) {
+        var reader = new FileReader();
+        reader.readAsDataURL(picture[0]);
+        reader.onload = () => {
+            this.setState(
+                {pictures: this.state.pictures.concat({"name": picture[0].name,"base64_string": reader.result})}
+            );
+        };
+        reader.onerror = function (error) {
+            console.log('Error: ', error);
+        };
     }
 
     fetchData(id) {
@@ -70,17 +87,18 @@ class EditRecipe extends React.Component {
 
     onSubmit(event) {
         event.preventDefault();
-        const {id, name, ingredients, instruction } = this.state
+        const {id, name, ingredients, instruction, pictures } = this.state
         const url = `/api/v1/update/${id}`;
+        const token = document.querySelector('meta[name="csrf-token"]').content;
 
         const body = {
             id: id,
             name: name,
             ingredients: ingredients,
-            instruction: instruction.replace(/\n/g, "<br> <br>")
+            instruction: instruction.replace(/\n/g, "<br> <br>"),
+            pictures: pictures
         };
 
-        const token = document.querySelector('meta[name="csrf-token"]').content;
         fetch(url, {
             method: "PATCH",
             headers: {
@@ -103,12 +121,12 @@ class EditRecipe extends React.Component {
         this.setState({
             name: this.state.initialName,
             ingredients: this.state.initialIngredients,
-            instruction: this.state.initialInstruction
+            instruction: this.state.initialInstruction,
+            pictures: this.state.initialPictures
         });
     }
 
     render() {
-        // TODO: Handle replacing <br> <br> with \n when a user edits instruction
         const { id, name, ingredients, instruction } = this.state;
         return (
             <div className="container mt-5">
@@ -154,6 +172,12 @@ class EditRecipe extends React.Component {
                                 required
                                 defaultValue={instruction}
                                 onChange={this.onChange}
+                            />
+                            <ImageUploader
+                                withIcon={true}
+                                buttonText='Choose images'
+                                onChange={this.onDrop}
+                                imgExtension={['.jpg', '.gif', '.png', '.gif']}
                             />
                             <button type="submit" className="btn custom-button mt-3 mr-3">
                                 Save
