@@ -1,3 +1,6 @@
+require 'base64'
+require 'tempfile'
+
 class Api::V1::RecipesController < ApplicationController
   def index
     recipe = Recipe.all.order(created_at: :desc)
@@ -27,9 +30,22 @@ class Api::V1::RecipesController < ApplicationController
   end
 
   def update
-    if recipe
-      # TODO Validate that update was successful and react accordingly
-      recipe.update(recipe_params)
+    params[:pictures].each do |picture_param|
+      base64_string = picture_param[:base64_string]
+      name = picture_param[:name]
+      content_type = /data:(.*);base64,/.match(base64_string)[1]
+      base64_string.slice!(/data:.*;base64,/)
+      Tempfile.create(name) do |f|
+        f.write(Base64.decode64(base64_string).force_encoding("UTF-8"))
+        f.rewind
+        recipe.pictures.attach(
+          io: f,
+          filename: name,
+          content_type: content_type
+        )
+      end
+    end
+    if recipe.update!(recipe_params)
       render json: recipe
     else
       render json: recipe.errors
@@ -39,7 +55,7 @@ class Api::V1::RecipesController < ApplicationController
   private
 
   def recipe_params
-    params.permit(:name, :image, :ingredients, :instruction)
+    params.permit(:name, :ingredients, :instruction)
   end
 
   def recipe
